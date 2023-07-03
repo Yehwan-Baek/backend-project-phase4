@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :anime_genres
   resources :characters
   resources :release_dates
   resources :genres

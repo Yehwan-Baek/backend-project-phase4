@@ -1,0 +1,2 @@
+class AnimeGenresController < ApplicationController
+end
