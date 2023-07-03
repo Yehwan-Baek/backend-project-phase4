@@ -11,7 +11,8 @@ class Anime < ApplicationRecord
     has_many :users, through: :reviews
     has_many :users, through: :watch_lists
     has_many :genres, through: :anime_genres
-    has_one_attached :img
+    has_one :main_image_attachment, dependent: :destroy
+    has_one :main_image_blob, through: :main_image_attachment
 
     belongs_to :release_date
 end
