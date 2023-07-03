@@ -1,0 +1,2 @@
+class ReleaseDatesController < ApplicationController
+end
