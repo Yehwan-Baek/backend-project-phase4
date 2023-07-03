@@ -1,4 +1,9 @@
 class Anime < ApplicationRecord
+    validates :title, presence: true
+    validates :description, presence: true
+    validates :average_rating, presence: true, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 5 }
+    validates :release_date, presence: true
+
     has_many :reviews
     has_many :watch_lists
     has_many :anime_genres
