@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_03_091116) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_04_080621) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -50,21 +50,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_03_091116) do
 
   create_table "animes", force: :cascade do |t|
     t.string "title"
-    t.string "img"
     t.text "description"
     t.float "average_rating"
     t.integer "release_date_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["release_date_id"], name: "index_animes_on_release_date_id"
-  end
-
-  create_table "characters", force: :cascade do |t|
-    t.string "name"
-    t.string "img_url"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "genres", force: :cascade do |t|
