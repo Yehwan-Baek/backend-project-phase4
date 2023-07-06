@@ -15,6 +15,18 @@ require_relative 'animes_seed.rb'
 #     account_role: 1
 # )
 
+# user1 = User.create(
+#   email: "user1@example.com",
+#   username: "user1",
+#   password: "user123"
+# )
+
+# user2 = User.create(
+#   email: "user2@example.com",
+#   username: "user2",
+#   password: "user123"
+# )
+
 # Genre.create( name: "Action" )
 # Genre.create( name: "Adventure" )
 # Genre.create( name: "Comedy" )

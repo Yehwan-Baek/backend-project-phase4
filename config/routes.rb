@@ -6,16 +6,22 @@ Rails.application.routes.draw do
   resources :genres, only: [:index, :show] do
     resources :animes
   end
-  resources :watch_lists, only: [:create, :destory]
-  resources :reviews, only: [:index, :show]
+  resources :watch_lists
+  resources :reviews
   resources :animes do
     resources :reviews
     resources :blobs
-  end
-  resources :users do
-    resources :reviews
     resources :watch_lists
   end
+  resources :users, only: [:create] do
+    get '/me/reviews', to: 'users#me_reviews', on: :collection
+    resources :reviews
+    resources :watch_lists
+    get '/me', to: 'users#show', on: :collection
+  end
+  get '/me', to: 'users#show'
+  post '/login', to: 'sessions#create'
+  delete '/logout', to: 'sessions#destroy'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")

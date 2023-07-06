@@ -1,6 +1,8 @@
 class WatchListsController < ApplicationController
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
+
+    before_action :authorize
   
     def index
       if params[:user_id].present?
@@ -16,14 +18,33 @@ class WatchListsController < ApplicationController
     end
   
     def create
-      watch_list = WatchList.create!(watch_list_params)
-      render json: watch_list, status: :created
+      user = @current_user
+      anime_id = params[:anime_id]
+      existing_watch_list = user.watch_lists.find_by(anime_id: anime_id)
+      
+      if existing_watch_list
+        render json: { error: "Watch list already exists" }, status: :unprocessable_entity
+      else
+        watch_list = user.watch_lists.new(anime_id: anime_id)
+      
+        if watch_list.save
+          render json: watch_list, status: :created
+        else
+          render_unprocessable_entity_response(watch_list)
+        end
+      end
     end
+    
+    
   
     def destroy
       watch_list = find_watch_list
-      watch_list.destroy
-      head :no_content
+      if @current_user == watch_list.user
+        watch_list.destroy
+        head :no_content
+      else
+        render json: { error: "Not authorized to delete the review" }, status: :forbidden
+      end
     end
   
     private

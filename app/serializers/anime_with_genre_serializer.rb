@@ -3,4 +3,5 @@ class AnimeWithGenreSerializer < ActiveModel::Serializer
 
   has_one :release_date
   has_many :genres
+  has_many :reviews
 end
