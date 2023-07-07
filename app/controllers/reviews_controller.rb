@@ -36,9 +36,24 @@ class ReviewsController < ApplicationController
           render_unprocessable_entity_response(review)
         end
     end
-      
 
-      def destroy
+    def update
+        review = find_review
+        anime = review.anime
+      
+        if @current_user == review.user
+          if review.update(review_params)
+            update_average_rating(anime)
+            render json: review
+          else
+            render_unprocessable_entity_response(review)
+          end
+        else
+          render json: { error: "Not authorized to update the review" }, status: :forbidden
+        end
+    end
+      
+    def destroy
         review = find_review
         anime = review.anime
       
@@ -49,7 +64,7 @@ class ReviewsController < ApplicationController
         else
           render json: { error: "Not authorized to delete the review" }, status: :forbidden
         end
-      end
+    end
       
 
     private
