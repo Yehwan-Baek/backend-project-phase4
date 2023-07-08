@@ -15,7 +15,7 @@ class AnimesController < ApplicationController
         else
             animes = Anime.all
         end
-        render json: animes
+        render json: animes, methods: [:image_url]
     end
 
     def show
@@ -66,7 +66,13 @@ class AnimesController < ApplicationController
 
     def anime_params
         params.require(:anime).permit(:title, :description, :release_date_id, genres: [])
-    end      
+    end 
+    
+    def image_url
+        if image.attached?
+          Rails.application.routes.url_helpers.url_for(image)
+        end
+    end
 
     def attach_image(anime)
         if params.dig(:image, :file_path).present?
