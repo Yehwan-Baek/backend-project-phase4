@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-require_relative 'animes_seed.rb'
+require_relative './animes_seed'
 
 # admin = User.create(
 #     email: "admin@example.com",

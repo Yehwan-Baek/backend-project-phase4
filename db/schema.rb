@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_07_05_060404) do
+ActiveRecord::Schema[7.0].define(version: 2023_07_13_032209) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,35 +39,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_060404) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "anime_genres", force: :cascade do |t|
-    t.integer "genre_id", null: false
-    t.integer "anime_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["anime_id"], name: "index_anime_genres_on_anime_id"
-    t.index ["genre_id"], name: "index_anime_genres_on_genre_id"
-  end
-
   create_table "animes", force: :cascade do |t|
     t.string "title"
     t.text "description"
     t.float "average_rating"
-    t.integer "release_date_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["release_date_id"], name: "index_animes_on_release_date_id"
-  end
-
-  create_table "genres", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "release_dates", force: :cascade do |t|
-    t.integer "year"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "genres"
+    t.string "release_date"
   end
 
   create_table "reviews", force: :cascade do |t|
@@ -77,6 +56,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_060404) do
     t.integer "anime_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "likes", default: 0
     t.index ["anime_id"], name: "index_reviews_on_anime_id"
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
@@ -101,9 +81,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_07_05_060404) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "anime_genres", "animes"
-  add_foreign_key "anime_genres", "genres"
-  add_foreign_key "animes", "release_dates"
   add_foreign_key "reviews", "animes"
   add_foreign_key "reviews", "users"
   add_foreign_key "watch_lists", "animes"

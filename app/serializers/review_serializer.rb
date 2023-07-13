@@ -1,5 +1,5 @@
 class ReviewSerializer < ActiveModel::Serializer
-  attributes :id, :anime_id, :title, :user_id, :comment, :rating
+  attributes :id, :anime_id, :title, :user_id, :comment, :rating, :likes
 
   def title
     object.anime.title

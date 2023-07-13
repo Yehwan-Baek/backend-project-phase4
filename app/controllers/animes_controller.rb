@@ -6,30 +6,52 @@ class AnimesController < ApplicationController
     before_action :authenticate_admin!, only: [:create, :destroy]
 
     def index
-        if params[:genre_id].present?
-            genre = find_genre
-            animes = genre.animes
-        elsif params[:release_date_id].present?
-            releae_date = find_release_date
-            animes = releae_date.animes
-        else
-            animes = Anime.all
-        end
+        # if params[:genre_id].present?
+        #     genre = find_genre
+        #     animes = genre.animes
+        # elsif params[:release_date_id].present?
+        #     releae_date = find_release_date
+        #     animes = releae_date.animes
+        # else
+        animes = Anime.all
+        # end
         render json: animes, methods: [:image_url]
     end
 
     def show
         anime = find_anime
         image_variant = anime.image.variant(resize: "300x300")
-        render json: anime, serializer: AnimeWithGenreSerializer, image_url: image_variant.url
+        render json: anime, serializer: AnimeWithGenreSerializer, methods: [:image_url]
+    end
+
+    def show_animes_by_genre
+        genre_id = params[:genre_id]
+        genre = GENRES_MAP[genre_id]
+      
+        if genre
+          animes = Anime.where("genres LIKE ?", "%#{genre}%")
+          render json: animes, methods: [:image_url]
+        else
+          render json: { error: "Invalid genre id" }, status: :unprocessable_entity
+        end
+    end
+      
+    def show_animes_by_release_date
+        release_date_id = params[:release_date_id]
+        release_date = RELEASE_DATE[release_date_id]
+      
+        if release_date
+          animes = Anime.where(release_date: release_date)
+          render json: animes, methods: [:image_url]
+        else
+          render json: { error: "Invalid release date id" }, status: :unprocessable_entity
+        end
     end
 
     def create
         anime = Anime.create!(anime_params)
         attach_image(anime)
-        genres = params[:genres].map { |genre_name| Genre.find_or_create_by(name: genre_name) }
-        anime.genres = genres
-      
+        
         render json: anime, status: :created
     end
 
@@ -52,20 +74,12 @@ class AnimesController < ApplicationController
 
     private
 
-    def find_release_date
-        ReleaseDate.find(params[:release_date_id])
-    end
-    
-    def find_genre
-        Genre.find(params[:genre_id])
-    end
-
     def find_anime
         Anime.find(params[:id])
     end
 
     def anime_params
-        params.require(:anime).permit(:title, :description, :release_date_id, genres: [])
+        params.require(:anime).permit(:title, :description, :release_date, :genres)
     end 
     
     def image_url
@@ -98,9 +112,54 @@ class AnimesController < ApplicationController
 
     def authenticate_user!
         render json: { error: "Not user authorized" }, status: :forbidden unless @current_user && (@current_user.account_role == 0 || @current_user.account_role == 1)
-      end
+    end
     
-      def authenticate_admin!
+    def authenticate_admin!
         render json: { error: "Not admin authorized" }, status: :forbidden unless @current_user && @current_user.account_role == 1
-      end
+    end
+
+    GENRES_MAP = {
+        "1" => "Action",
+        "2" => "Adventure",
+        "3" => "Comedy",
+        "4" => "Drama",
+        "5" => "Fantasy",
+        "6" => "Music",
+        "7" => "Romance",
+        "8" => "Sci-Fi",
+        "9" => "Seinen",
+        "10" => "Shojo",
+        "11" => "Shonen",
+        "12" => "Slice of Life",
+        "13" => "Sports",
+        "14" => "Supernatural",
+        "15" => "Thriller"
+    }
+
+    RELEASE_DATE = {
+        "1" => "2023",
+        "2" => "2022",
+        "3" => "2021",
+        "4" => "2020",
+        "5" => "2019",
+        "6" => "2018",
+        "7" => "2017",
+        "8" => "2016",
+        "9" => "2015",
+        "10" => "2014",
+        "11" => "2013",
+        "12" => "2012",
+        "13" => "2011",
+        "14" => "2010",
+        "15" => "2009",
+        "16" => "2008",
+        "17" => "2007",
+        "18" => "2006",
+        "19" => "2005",
+        "20" => "2004",
+        "21" => "2003",
+        "22" => "2002",
+        "23" => "2001",
+        "24" => "2000"
+    }
 end

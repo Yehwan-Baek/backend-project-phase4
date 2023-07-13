@@ -65,7 +65,12 @@ class ReviewsController < ApplicationController
           render json: { error: "Not authorized to delete the review" }, status: :forbidden
         end
     end
-      
+
+    def likes
+        review = find_review
+        review.increment!(:likes)
+        render json: review
+    end
 
     private
 

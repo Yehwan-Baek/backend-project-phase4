@@ -14,6 +14,18 @@ class UsersController < ApplicationController
         render json: user, serializer: UserWithReviewsAndWatchListsSerializer
     end
 
+    def me_reviews
+        user = @current_user
+        reviews = user.reviews
+        render json: reviews
+    end
+
+    def me_watch_lists
+        user = @current_user
+        watch_lists = user.watch_lists
+        render json: watch_lists
+    end
+
     def create
         user = User.create!(user_params)
         render json: user, status: :created
