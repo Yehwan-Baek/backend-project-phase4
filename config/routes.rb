@@ -20,8 +20,8 @@ Rails.application.routes.draw do
     resources :watch_lists
   end
   resources :users, only: [:create] do
-    resources :reviews
-    resources :watch_lists
+    resources :reviews, only: [:index, :show]
+    resources :watch_lists, only: [:index, :show]
   end
   get '/me', to: 'users#show'
   get '/me/reviews', to: 'users#me_reviews'
