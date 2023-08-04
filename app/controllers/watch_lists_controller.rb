@@ -35,8 +35,6 @@ class WatchListsController < ApplicationController
       end
     end
     
-    
-  
     def destroy
       watch_list = find_watch_list
       if @current_user == watch_list.user

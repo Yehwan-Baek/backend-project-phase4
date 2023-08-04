@@ -1,0 +1,12 @@
+.genre-checkbox-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Change the number of columns here */
+    gap: 4px; /* Adjust the gap between items */
+  }
+  
+  .genre-checkbox-item {
+    display: flex;
+    align-items: center;
+    margin: 0 4px; /* Adjust the horizontal margin here */
+  }
+  

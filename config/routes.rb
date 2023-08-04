@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   # end
   get '/genres/:genre_id/animes', to: 'animes#show_animes_by_genre'
   get '/release_dates/:release_date_id/animes', to: 'animes#show_animes_by_release_date'
+  get '/animes/order_by_average_rating', to: 'animes#order_by_average_rating'
+  get '/animes/all', to: 'animes#index_with_details'
   resources :watch_lists
   resources :reviews do
     member do

@@ -19,6 +19,10 @@ class User < ApplicationRecord
         bcrypt_password == password
     end
 
+    def has_review_for_anime?(anime)
+        reviews.exists?(anime: anime)
+    end
+
     def me_reviews
         user = @current_user
         reviews = user.reviews

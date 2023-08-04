@@ -26,16 +26,21 @@ class ReviewsController < ApplicationController
         user = @current_user
         anime = Anime.find(params[:anime_id])
       
-        review = user.reviews.new(review_params)
-        review.anime = anime
-      
-        if review.save
-          update_average_rating(anime)
-          render json: review, status: :created
+        if user.has_review_for_anime?(anime)
+          render json: { error: "You have already reviewed this anime" }, status: :unprocessable_entity
         else
-          render_unprocessable_entity_response(review)
+          review = user.reviews.new(review_params)
+          review.anime = anime
+      
+          if review.save
+            update_average_rating(anime)
+            render json: review, status: :created
+          else
+            render_unprocessable_entity_response(review)
+          end
         end
     end
+      
 
     def update
         review = find_review

@@ -2,12 +2,12 @@
 import React from 'react';
 import LogInForm from '../Molecules/LogInForm';
 
-function LogInPage() {
+function LogInPage({ handleLogin }) {
 
     return (
-        <div>
+        <div style={{ textAlign: "center" }}>
             <h1>Log In</h1>
-            <LogInForm/>
+            <LogInForm handleLogin={handleLogin}/>
         </div>
     );
 }

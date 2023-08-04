@@ -1,11 +1,28 @@
 import React from 'react';
 
-function AnimeCard({ title, image }) {
+function AnimeCard({ animeId, title, image, style, onCardClick }) {
+  const cardStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    ...style,
+  };
+
+  const imageStyle = {
+    maxWidth: '100%',
+    maxHeight: '100%',
+    objectFit: 'cover',
+  };
+
+  const handleClick = () => {
+    onCardClick(animeId);
+  };
+
   return (
-    <div>
-      <img src={image} alt={title} />
-      <h3>{title}</h3>
-    </div>
+        <div key={animeId} style={cardStyle} className="anime-card" onClick={handleClick}>
+          <img src={image} alt={title} style={imageStyle} />
+          <h3>{title}</h3>
+        </div>
   );
 }
 

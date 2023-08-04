@@ -2,22 +2,19 @@ class AnimesController < ApplicationController
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found_response
     rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity_response
 
-    before_action :authorize, except: [:index]
+    before_action :authorize, except: [:index, :show_animes_by_genre, :show_animes_by_release_date, :order_by_average_rating]
     before_action :authenticate_admin!, only: [:create, :destroy]
 
     def index
-        # if params[:genre_id].present?
-        #     genre = find_genre
-        #     animes = genre.animes
-        # elsif params[:release_date_id].present?
-        #     releae_date = find_release_date
-        #     animes = releae_date.animes
-        # else
         animes = Anime.all
-        # end
         render json: animes, methods: [:image_url]
     end
 
+    def index_with_details
+        animes = Anime.all
+        render json: animes, each_serializer: AnimeWithDetailSerializer
+    end
+      
     def show
         anime = find_anime
         image_variant = anime.image.variant(resize: "300x300")
@@ -46,6 +43,11 @@ class AnimesController < ApplicationController
         else
           render json: { error: "Invalid release date id" }, status: :unprocessable_entity
         end
+    end
+
+    def order_by_average_rating
+        animes = Anime.all.order(average_rating: :desc)
+        render json: animes, methods: [:image_url]
     end
 
     def create
@@ -88,13 +90,21 @@ class AnimesController < ApplicationController
         end
     end
 
+    # def attach_image(anime)
+    #     if params.dig(:image, :file_path).present?
+    #         file_path = File.join(Rails.root, params[:image][:file_path])
+    #         file = File.open(file_path)
+    #         anime.image.attach(io: file, filename: params[:image][:file_name])
+    #     end
+    # end
+
     def attach_image(anime)
         if params.dig(:image, :file_path).present?
-            file_path = File.join(Rails.root, params[:image][:file_path])
-            file = File.open(file_path)
-            anime.image.attach(io: file, filename: params[:image][:file_name])
+          file = params[:image][:file_path]
+          anime.image.attach(io: file, filename: params[:image][:file_name])
         end
     end
+      
 
     def update_average_rating(anime)
         reviews = anime.reviews
